@@ -4,9 +4,6 @@ This is a tiny Go app that forwards phone calls, records voicemail, and bridges
 SMS to email. You'll need a paid [Twilio](https://www.twilio.com/) account and
 free [Mailgun](http://www.mailgun.com/) account to get up and running.
 
-It runs on Heroku with the [Go
-buildpack](https://github.com/kr/heroku-buildpack-go).
-
 ## Environment Variables
 
 Name | Description | Example
@@ -22,6 +19,21 @@ Name | Description | Example
 `BASE_URL` | The URL to the application with no trailing slash. | `https://example.herokuapp.com`
 
 ## Setup
+
+**Deployment**
+
+Docker instructions:
+
+```sh
+go build
+rm twilio-forwarder
+# Build statically linked binary
+docker run --rm -it -v "$GOPATH":/gopath -v "$(pwd)":/app -e "GOPATH=/gopath" -w /app golang:1.5.3 sh -c 'CGO_ENABLED=0 go build -a --installsuffix cgo --ldflags="-s" -o twilio-forwarder'
+# Build image
+docker build -t twilio-forwarder .
+```
+
+Create a docker-compose file with all the env vars you need.
 
 **Twilio**
 
