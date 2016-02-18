@@ -21,10 +21,12 @@ import (
 	"github.com/codegangsta/martini"
 	"github.com/mailgun/mailgun-go"
 	"github.com/subosito/twilio"
+	"github.com/sfreiberg/gotwilio"
 )
 
 var twilioAccount = os.Getenv("TWILIO_ACCOUNT")
 var twilioKey = os.Getenv("TWILIO_KEY")
+var tc2 = gotwilio.NewTwilioClient(twilioAccount, twilioKey)
 var mailgunPublicKey = os.Getenv("MAILGUN_PUBLIC_KEY")
 var mailgunKey = os.Getenv("MAILGUN_KEY")
 var smsFrom = os.Getenv("FROM_NUMBER")
@@ -189,7 +191,8 @@ func requestURL(req *http.Request) string {
 
 func verifyTwilioReq(w http.ResponseWriter, req *http.Request, log *log.Logger) {
 	req.ParseForm()
-	err := verifyTwilioSig(requestURL(req), req.PostForm, req.Header.Get("X-Twilio-Signature"))
+	// err := verifyTwilioSig(requestURL(req), req.PostForm, req.Header.Get("X-Twilio-Signature"))
+	_, err := tc2.CheckRequestSignature(req, requestURL(req))
 	if err != nil {
 		log.Println("Twilio request verification failed:", err)
 		w.WriteHeader(403)
