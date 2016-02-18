@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/codegangsta/martini"
-	"github.com/mbanzon/mailgun"
+	"github.com/mailgun/mailgun-go"
 	"github.com/subosito/twilio"
 )
 
